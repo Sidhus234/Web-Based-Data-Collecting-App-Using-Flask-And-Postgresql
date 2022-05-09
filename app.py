@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from send_email import send_email
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres123@localhost/height_collector'
@@ -31,7 +32,7 @@ def success():
             data = Data(email, height)
             db.session.add(data)
             db.session.commit()
-            print(email, float(height))
+            send_email(email, float(height))
             return render_template("success.html")
         else:
             return render_template("index.html", text="Seems like we've got something from that email address already!")
